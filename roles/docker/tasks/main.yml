@@ -1,0 +1,29 @@
+---
+     - name: Update Cache
+       apt: update_cache=yes
+    
+     # Explanation: As with the Maven role, the first step is to update the package manager’s cache.
+
+     
+     - name: Install Docker Engine
+       apt: name=docker.io state=present
+     
+     # Explanation: This task installs Docker Engine, the software that allows containers to be run on the machine.
+
+     
+     - name: Start Docker Service
+       service: name=docker state=started
+     
+     # Explanation: This task ensures that the Docker service is running, so Docker commands can be executed.
+
+     
+     - name: Permission for user
+       user: name={{demouser}} group=docker
+     
+     # Explanation: This task adds the specified user to the Docker group, granting them the permissions needed to run Docker commands without using `sudo`.
+
+     
+     - name: Install Docker Compose
+       apt: name=docker-compose state=present
+     
+     # Explanation: This task installs Docker Compose, a tool that allows you to define and run multi-container Docker applications. It’s especially useful for setting up complex development environments.

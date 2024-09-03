@@ -1,0 +1,85 @@
+
+---
+
+     - name: Apt Update
+       apt: update_cache=yes
+     
+     # Explanation: This task updates the package manager’s cache. It's a common first step to ensure the latest package lists are used when installing software.
+
+     
+     - name: Install JDK 1.8
+       apt: name=openjdk-8-jdk state=present
+    
+     # Explanation: This task installs Java Development Kit (JDK) version 1.8. JDK is necessary for compiling Java applications, which Maven will do as part of the build process.
+
+     
+     - name: Install Git
+       apt: name=git state=present
+     
+     # Explanation: This task installs Git, which is required to clone the source code from GitHub or other repositories.
+
+     
+     - name: Check & create download dir
+       file:
+         path: '{{ maven_home_parent_directory }}'
+         state: directory
+         mode: 0755
+     
+     # Explanation: This task ensures that the directory where Maven will be downloaded exists. If it doesn’t, Ansible will create it. The `mode: 0755` sets the directory’s permissions.
+
+     
+     - name: Checking if Maven is already installed
+       stat:
+         path: '{{ maven_home_parent_directory }}/apache-maven-{{ maven_version }}'
+       register: maven_installed
+     
+     # Explanation: This task checks if the specified version of Maven is already installed. It stores the result in a variable called `maven_installed`.
+
+     
+     - name: Downloading Maven Binaries
+       get_url:
+         url: '{{ maven_download_url }}'
+         dest: '{{ maven_home_parent_directory }}/{{ maven_file_name }}'
+       when: maven_installed.stat.exists != True
+     
+     # Explanation: If Maven is not already installed, this task downloads the Maven binaries from the specified URL.
+
+     
+     - name: Unarchive Maven Binaries
+       unarchive:
+         src: '{{ maven_home_parent_directory }}/{{ maven_file_name }}'
+         dest: '{{ maven_home_parent_directory }}'
+         copy: no
+       when: maven_installed.stat.exists != True
+     
+     # Explanation: After downloading, this task extracts (unarchives) the Maven binaries to the specified directory.
+
+     
+     - name: Remove old path configuration
+       file:
+         path: /etc/profile.d/maven.sh
+         state: absent
+       when: maven_installed.stat.exists != True
+     
+     # Explanation: This task removes any old Maven path configuration files to prevent conflicts. 
+
+     
+     - name: Maven path configuration
+       lineinfile:
+         dest: /etc/profile.d/maven.sh
+         line: '{{ item.line }}'
+         create: yes
+         state: present
+       with_items:
+         - { line: 'M2_HOME={{maven_home_parent_directory}}/apache-maven-{{maven_version}}' }
+         - { line: 'PATH=$PATH:$M2_HOME/bin' }
+     
+     # Explanation: This task configures the environment variables needed for Maven to work. It sets the `M2_HOME` and adds Maven to the system’s `PATH`, so that Maven commands can be run from anywhere in the terminal.
+
+     
+     - name: Cleaning Up
+       file:
+         path: '{{ maven_home_parent_directory }}/{{ maven_file_name }}'
+         state: absent
+     
+     # Explanation: This final task deletes the downloaded Maven archive to free up space, as it’s no longer needed after extract
