@@ -68,9 +68,9 @@ Prerequisites
 
    - Ensure the security group settings:
      - Make sure your AWS security group allows SSH (port 22) connections. 
-     - If necessary, update the security group associated with the instances to allow port 22:
-       bash
-       aws ec2 authorize-security-group-ingress --group-name YourSecurityGroupName --protocol tcp --port 22 --cidr 0.0.0.0/0
+     - Inside the `main.tf` file, there is an AWS security group configuration that you can replace with your own, ensuring that the existing security group allows SSH (port 22) inbound rules.
+     -  If necessary, update the security group associated with the instances to allow port 22:
+       
        
 
    The PEM file is crucial for Ansible to establish SSH connections with the newly created instances during playbook execution. Ensure that the file name matches what’s specified in your playbook, and the security group allows SSH access.
