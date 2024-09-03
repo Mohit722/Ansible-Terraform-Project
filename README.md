@@ -1,5 +1,7 @@
 Ansible-Terraform Project
 --------------------------
+Overview: This project automates the creation of new AWS instances using Terraform, utilizing an existing security group that permits SSH access on port 22. After the instances are created, Terraform's provisioner triggers an Ansible playbook, which executes two tasks on the new instances: setting up Docker and Maven. This ensures that the instances are ready for use with these essential tools installed.
+
 
 This repository contains Ansible playbooks and Terraform configurations for setting up and managing infrastructure on AWS. Follow the steps below to clone the repository, set up your environment, and deploy the infrastructure.
 
