@@ -11,7 +11,7 @@ Prerequisites
 
 1. Clone the GitHub repository:
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/Mohit722/Ansible-Terraform-Project.git>
    cd Ansible-Terraform-project
    ```
 
