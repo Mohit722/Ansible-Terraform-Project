@@ -26,7 +26,7 @@ variable "BuildUser" {
 
 variable "SecurityGroupID" {
   description = "The ID of the security group to associate with the instance"
-  default     = "sg-0a4b86efefd9999b7"
+  default     = "sg-0aa435dsfrtrrt4"
 }
 
 
